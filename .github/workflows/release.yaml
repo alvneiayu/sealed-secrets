@@ -64,26 +64,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
 
-      # Build & Publish multi-arch image
-      - name: Login to Quay
-        uses: docker/login-action@v1
-        with:
-          registry: quay.io
-          username: ${{ secrets.QUAY_USERNAME }}
-          password: ${{ secrets.QUAY_ROBOT_TOKEN }}
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64,linux/arm
-          push: true
-          tags: ${{ env.image_name }}:latest,${{ env.image_name }}:${{ github.ref_name }}
-      - name: Sign image with a key
-        run: |
-          echo -n "$COSIGN_PASSWORD" | cosign sign --key /tmp/cosign.key $TAG_LATEST
-          echo -n "$COSIGN_PASSWORD" | cosign sign --key /tmp/cosign.key $TAG_CURRENT
-        env:
-          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-          TAG_LATEST: ${{ env.image_name }}:latest
-          TAG_CURRENT: ${{ env.image_name }}:${{ github.ref_name }}
