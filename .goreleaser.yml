@@ -9,25 +9,10 @@ builds:
       - -X main.VERSION={{ .Version }}
     targets:
       - darwin_amd64
+      - darwin_arm64
       - linux_amd64
       - linux_arm64
       - linux_arm
-      - windows_amd64
-  - binary: kubeseal
-    id: kubeseal
-    main: ./cmd/kubeseal
-    ldflags:
-      - -X main.VERSION={{ .Version }}
-    targets:
-      - darwin_amd64
-      - linux_amd64
-      - linux_arm64
-      - linux_arm
-      - windows_amd64
-archives:
-  - builds:
-      - kubeseal
-    name_template: "kubeseal-{{ .Version }}-{{ .Os }}-{{ .Arch }}"
 checksum:
   algorithm: sha256
 changelog:
