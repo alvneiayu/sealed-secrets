@@ -82,12 +82,6 @@ jobs:
           images: |
             docker.io/alvneiayu/sealed-secrets-controller
             ghcr.io/${{ github.repository }}
-      - name: Sign image with a key
-        run: |
-          echo -n "$COSIGN_PASSWORD" | cosign sign --key /tmp/cosign.key $TAG_CURRENT
-        env:
-          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-          TAG_CURRENT: ${{ steps.meta.outputs.tags }}
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
@@ -97,3 +91,10 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      - name: Sign image with a key
+        run: |
+          echo -n "$COSIGN_PASSWORD" | cosign sign --key /tmp/cosign.key $TAG_CURRENT
+        env:
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          TAG_CURRENT: ${{ steps.meta.outputs.tags }}
+          COSIGN_REPOSITORY: docker.io/alvneiayu/sealed-secrets-controller/cosign
