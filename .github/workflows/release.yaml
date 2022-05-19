@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       image_name: docker.io/alvneiayu/sealed-secrets-controller
+      cosign_repo: docker.io/alvneiayu/sealed-secrets-cosign
     steps:
       # Checkout and set env
       - name: Checkout
@@ -97,11 +98,11 @@ jobs:
         env:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           TAG_CURRENT: ${{ steps.meta.outputs.tags }}
-          COSIGN_REPOSITORY: ${{ env.image_name }}/cosign
+          COSIGN_REPOSITORY: ${{ env.image_name }}
       - name: Sign image with a key in GHCR
         run: |
           echo -n "$COSIGN_PASSWORD" | cosign sign --key /tmp/cosign.key $TAG_CURRENT
         env:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           TAG_CURRENT: ${{ steps.meta.outputs.tags }}
-          COSIGN_REPOSITORY: ghcr.io/${{ github.repository }}/cosign
+          COSIGN_REPOSITORY: ghcr.io/${{ github.repository }}/signs
