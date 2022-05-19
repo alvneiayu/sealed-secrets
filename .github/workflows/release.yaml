@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      dockerhub_image_name: docker.io/bitnami/sealed-secrets-controller
+      dockerhub_image_name: docker.io/alvneiayu/sealed-secrets-controller
       ghcr_image_name: ghcr.io/${{ github.repository }}
     steps:
       # Checkout and set env
