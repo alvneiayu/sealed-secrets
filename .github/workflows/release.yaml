@@ -91,14 +91,14 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Dockerhub: Sign image with a key
+      - name: Sign image with a key in Dockerhub
         run: |
           echo -n "$COSIGN_PASSWORD" | cosign sign --key /tmp/cosign.key $TAG_CURRENT
         env:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           TAG_CURRENT: ${{ steps.meta.outputs.tags }}
           COSIGN_REPOSITORY: ${{ env.image_name }}/cosign
-      - name: Dockerhub: Sign image with a key
+      - name: Sign image with a key in GHCR
         run: |
           echo -n "$COSIGN_PASSWORD" | cosign sign --key /tmp/cosign.key $TAG_CURRENT
         env:
