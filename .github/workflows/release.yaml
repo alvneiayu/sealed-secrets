@@ -80,7 +80,7 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: |
-            docker.io/alvneiayu/sealed-secrets-controller
+            ${{ env.image_name }}
             ghcr.io/${{ github.repository }}
       - name: Build and push
         id: docker_build
@@ -91,10 +91,17 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Sign image with a key
+      - name: Dockerhub: Sign image with a key
         run: |
           echo -n "$COSIGN_PASSWORD" | cosign sign --key /tmp/cosign.key $TAG_CURRENT
         env:
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
           TAG_CURRENT: ${{ steps.meta.outputs.tags }}
-          COSIGN_REPOSITORY: docker.io/alvneiayu/sealed-secrets-controller/cosign
+          COSIGN_REPOSITORY: ${{ env.image_name }}/cosign
+      - name: Dockerhub: Sign image with a key
+        run: |
+          echo -n "$COSIGN_PASSWORD" | cosign sign --key /tmp/cosign.key $TAG_CURRENT
+        env:
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+          TAG_CURRENT: ${{ steps.meta.outputs.tags }}
+          COSIGN_REPOSITORY: ghcr.io/${{ github.repository }}/cosign
