@@ -13,8 +13,10 @@ jobs:
       matrix:
         gotestsum: ["1.8.1"]
     env:
-      dockerhub_image_name: docker.io/bitnami/sealed-secrets-controller
-      ghcr_image_name: ghcr.io/bitnami-labs/sealed-secrets-controller
+      dockerhub: docker.io/bitnami
+      ghcr: ghcr.io/bitnami-labs
+      controller_image_name: sealed-secrets-controller
+      kubeseal_image_name: sealed-secrets-kubeseal
     steps:
       # Checkout and set env
       - name: Checkout
@@ -41,7 +43,7 @@ jobs:
       - name: K8s manifests
         run: |
           export PATH=~/bin:$PATH
-          make CONTROLLER_IMAGE=${{ env.dockerhub_image_name }}:${{ github.ref_name }} controller.yaml controller-norbac.yaml
+          make CONTROLLER_IMAGE=${{ env.dockerhub }}/${{ env.controller_image_name }}:${{ github.ref_name }} controller.yaml controller-norbac.yaml
 
       # Setup env for multi-arch builds
       - name: Set up QEMU
@@ -88,8 +90,10 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: |
-            ${{ env.dockerhub_image_name }}
-            ${{ env.ghcr_image_name }}
+            ${{ env.dockerhub }}/${{ env.controller_image_name }}
+            ${{ env.dockerhub }}/${{ env.kubeseal_image_name }}
+            ${{ env.ghcr }}/${{ env.controller_image_name }}
+            ${{ env.ghcr }}/${{ env.kubeseal_image_name }}
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
