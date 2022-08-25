@@ -4,6 +4,6 @@ LABEL maintainer "Bitnami <containers@bitnami.com>, Marko Mikulicic <mmikulicic@
 USER 1001
 
 ARG TARGETARCH
-COPY dist/kubeseal_linux_${TARGETARCH}/kubeseal /usr/local/bin/
+COPY dist/kubeseal_linux_${TARGETARCH}*/kubeseal /usr/local/bin/
 
 ENTRYPOINT ["kubeseal"]
