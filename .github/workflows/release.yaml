@@ -13,8 +13,8 @@ jobs:
       matrix:
         gotestsum: ["1.8.1"]
     env:
-      dockerhub: docker.io/bitnami
-      ghcr: ghcr.io/bitnami-labs
+      dockerhub: docker.io/alvneiayu/sealed-secrets
+      ghcr: ghcr.io/alvneiayu/sealed-secrets
       controller_image_name: sealed-secrets-controller
       kubeseal_image_name: sealed-secrets-kubeseal
     steps:
