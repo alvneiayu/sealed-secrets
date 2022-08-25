@@ -9,14 +9,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        gotestsum: ["1.8.1"]
     env:
       dockerhub: docker.io/alvneiayu/sealed-secrets
       ghcr: ghcr.io/alvneiayu/sealed-secrets
       controller_image_name: sealed-secrets-controller
       kubeseal_image_name: sealed-secrets-kubeseal
+    strategy:
+      matrix:
+        include:
+          - dockerfile: ./docker/controller.Dockerfile
+            image: docker.io/alvneiayu/sealed-secrets/sealed-secrets-controller
+          - dockerfile: ./docker/controller.Dockerfile
+            image: ghcr.io/alvneiayu/sealed-secrets/sealed-secrets-controller
+          - dockerfile: ./docker/kubeseal.Dockerfile
+            image: docker.io/alvneiayu/sealed-secrets/sealed-secrets-kubeseal
+          - dockerfile: ./docker/kubeseal.Dockerfile
+            image: ghcr.io/alvneiayu/sealed-secrets/sealed-secrets-kubeseal
+        gotestsum: ["1.8.1"]
+
     steps:
       # Checkout and set env
       - name: Checkout
@@ -89,16 +99,13 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: |
-            ${{ env.dockerhub }}/${{ env.controller_image_name }}
-            ${{ env.dockerhub }}/${{ env.kubeseal_image_name }}
-            ${{ env.ghcr }}/${{ env.controller_image_name }}
-            ${{ env.ghcr }}/${{ env.kubeseal_image_name }}
+          images: ${{ matrix.image }}
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
         with:
           context: .
+          file: ${{ matrix.dockerfile }}
           platforms: linux/amd64,linux/arm64,linux/arm
           push: true
           tags: ${{ steps.meta.outputs.tags }}
