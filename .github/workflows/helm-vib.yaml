@@ -36,8 +36,8 @@ jobs:
     strategy:
       matrix:
        include:
-         - target-platform: gke
-           target-platform-id: 91d398a2-25c4-4cda-8732-75a3cfc179a1
+         - target-platform: OpenShift
+           target-platform-id: ebac9e0d-3931-4515-ba54-e6adada1f174
       fail-fast: false
     name: Verify chart in ${{ matrix.target-platform}}
     steps:
