@@ -2,16 +2,16 @@ name: Scheduled Release
 
 on:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "*/5 * * * *"
 
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
       controller_dockerhub_image_name: docker.io/bitnami/sealed-secrets-controller
-      controller_ghcr_image_name: ghcr.io/bitnami-labs/sealed-secrets-controller
+      controller_ghcr_image_name: ghcr.io/alvneiayu/sealed-secrets-controller
       kubeseal_dockerhub_image_name: docker.io/bitnami/sealed-secrets-kubeseal
-      kubeseal_ghcr_image_name: ghcr.io/bitnami-labs/sealed-secrets-kubeseal
+      kubeseal_ghcr_image_name: ghcr.io/alvneiayu/sealed-secrets-kubeseal
     steps:
       # Checkout and set env
       - name: Checkout
