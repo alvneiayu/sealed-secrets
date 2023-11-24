@@ -16,6 +16,8 @@ jobs:
       # Checkout and set env
       - name: Checkout
         uses: actions/checkout@v3.1.0
+        with:
+          fetch-depth: 0
       - id: load-version
         run: |
           source $GITHUB_WORKSPACE/versions.env
