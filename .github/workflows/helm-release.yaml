@@ -7,6 +7,7 @@ on:
       - 'helm/sealed-secrets/Chart.yaml'
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   release:
@@ -51,6 +52,11 @@ jobs:
         run: |
           export PATH=~/bin:$PATH
           echo "chart_version=$(yq .version < ./helm/sealed-secrets/Chart.yaml)" >> $GITHUB_ENV
+
+      - name: Configure DNS for registry access
+        run: |
+          echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf > /dev/null
+          echo "nameserver 8.8.4.4" | sudo tee -a /etc/resolv.conf > /dev/null
 
       - name: OCI Push
         env:
